@@ -1,4 +1,4 @@
-# ![icon](https://raw.githubusercontent.com/ziligy/SnapLocation/master/SnapLocation-github.png "icon") Snap!Location
+# ![icon](https://raw.githubusercontent.com/ziligy/SnapLocation/master/snapLocation-github.png "icon") Snap!Location
 
 Snap!Location is a micro-app that snaps your current location and writes it to pasteboard it also opionally saves a map image in photos.
 
