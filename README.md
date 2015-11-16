@@ -2,8 +2,19 @@
 
 Snap!Location is a micro-app written in Swift that snaps your current location and writes it to pasteboard, it also optionally saves a map image in photos.
 
-Saved Photo Example:
-# ![example](https://raw.githubusercontent.com/ziligy/SnapLocation/master/SnapLocationPhotoExample.jpg "example")
+#### Saved Photo Example:
+![example](https://raw.githubusercontent.com/ziligy/SnapLocation/master/SnapLocationPhotoExample.jpg "example")
+
+
+#### Saved To Pasteboard:
+```
+street: Independence Ave NW
+location: Washington, DC
+zipcode: 20037
+latitude: 38.88930
+longitude: -77.05001
+gpstime: 11/15/15 3:26 PM 
+```
 
 ## Features
 - writes formatted current address & gps point info to the pasteboard
