@@ -9,12 +9,11 @@ Snap!Location is a micro-app written in Swift that snaps location info and optio
 
 #### Saved To Pasteboard:
 ```
-street: Independence Ave NW
+street: Lincoln Memorial Cir NW
 location: Washington, DC
-zipcode: 20037
-latitude: 38.88930
-longitude: -77.05001
-gpstime: 11/15/15 3:26 PM
+latitude: 38.88927
+longitude: -77.04993
+gpstime: 12/26/15 8:43 AM
 ```
 
 ## Features
