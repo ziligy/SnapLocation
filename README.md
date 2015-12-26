@@ -57,26 +57,28 @@ gpstime: 11/15/15 3:26 PM
     + include GPS date/time
     + include address & zipcode
 
-## How to build
+## How to install
 
 1) Clone the repository
 
 ```
-$ git https://github.com/ziligy/SnapLocation.git
+$ git clone https://github.com/ziligy/SnapLocation.git
+
+```
+
+2) Change directory
+
+```
 $ cd SnapLocation
 ```
 
-2) Install pods
+3) Install pods
 
 ```
 $ pod install
 ```
 
-3) Open the workspace in Xcode
-
-```
-$ open "SnapLocation.xcworkspace"
-```
+Use SnapLocation.xcworkspace to open project
 
 ## Dependencies
 - [Realm](https://github.com/realm/realm-cocoa)
