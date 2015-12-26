@@ -1,6 +1,6 @@
 # ![icon](https://raw.githubusercontent.com/ziligy/SnapLocation/master/snapLocation-github.png "icon") Snap!Location
 
-Snap!Location is a micro-app written in Swift that snaps your current location and writes it to pasteboard, it also optionally saves a map image in photos.
+Snap!Location is a micro-app written in Swift that snaps location info and optionally writes it to pasteboard, saves a photo image, and/or stores a history.
 
 #### Saved Photo Example:
 
@@ -18,23 +18,50 @@ gpstime: 11/15/15 3:26 PM
 ```
 
 ## Features
+- get location info based on user's location or from the center point of the displayed screen
 - writes formatted current address & gps point info to the pasteboard
 - snaps a map image with or without overlaid location info
+- stores location info to history database
 - user configuration stored in NSUserDefaults
 - settings manager class included
 
+## Update v0.6
+- added history
+    + realm used for persistence
+    + history table & manager
+- updated settings manager
+    + code based
+- clarified button operations
+    + locate has choice of two modes
+    + snap has three settings
+- minimal use of location services
+    + location service turned off immediately when locate is complete
+- optional location pin
+    + ditched the blue dot
+- added carthage
+    + to load realm framework
+
 ## Settings
-- map type
-- zoom level
-- save to photos album
-- save location text to pasteboard
-- include location info in image
-- include latitude & longitude
-- include GPS date/time
-- include address
+- Map Display
+    + display location pin
+    + zoom level
+- Locate Action
+    + acquire locate info by user's location or screen display
+- Snap Actions
+    + save Snaps to Photos album
+    + save Snaps text to pasteboard
+    + save Snaps info to history
+- Text Display
+    + include city & state
+    + include latitude & longitude
+    + include GPS date/time
+    + include address & zipcode
+
+## Dependencies
+- [Realm](https://github.com/realm/realm-cocoa)
 
 ## Requirements
-1. Xcode 7.1
+1. Xcode 7.2
 2. Swift 2.0
 3. iOS 9.0+
 

@@ -65,6 +65,12 @@
       "idiom" : "ipad",
       "filename" : "snapLocation-ipad-app@2x.png",
       "scale" : "2x"
+    },
+    {
+      "size" : "83.5x83.5",
+      "idiom" : "ipad",
+      "filename" : "snapLocationipad-app-ios9@2x.png",
+      "scale" : "2x"
     }
   ],
   "info" : {

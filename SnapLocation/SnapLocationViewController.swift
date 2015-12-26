@@ -9,6 +9,7 @@ import UIKit
 import CoreLocation
 import MapKit
 import AudioToolbox
+import RealmSwift
 
 class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
@@ -19,25 +20,10 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
     
     /// label that contains the location text info
     /// its contents is varied by the user settings
-    private let infoScreen = UILabel()
-    
-    /// button to start the locationManager
-    private let locateButton = JGTapButton(frame: CGRect(x: 0,y: 0,width: 60,height: 60))
-    
-    /// button to trigger screen capture
-    private let snapButton = JGTapButton(frame: CGRect(x: 0,y: 0,width: 60,height: 60))
-    
-    /// button to bring up the settings screen
-    private let settingsButton  = JGTapButton(frame: CGRect(x: 0,y: 0,width: 60,height: 60))
+    private let infoScreen = UILabelInseted() // private class
     
     /// holds the locate & snap buttons
-    private let buttonStackView = UIStackView()
-    
-    /// the effect container
-    private var blurredImageEffectContainer = UIView()
-    
-    /// the effect imageView
-    private var fullScreenBlurredImageView = UIImageView()
+    private let toolbarStackView = ToolbarStackView()
     
     // MARK: Literals
     
@@ -48,6 +34,8 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
     private let cameraShutterSoundID: SystemSoundID = 1108
     
     // MARK: Private variables
+        
+    private var snapLocationObject = SnapLocationObject()
     
     /// stores the formatted display info
     private var infoTextToPaste = ""
@@ -55,14 +43,17 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
     /// the main locationManager object
     private let locationManager = CLLocationManager()
     
-    /// the placemark object from the location manager
-    private var placemark: CLPlacemark!
+    private var mapChangedFromUserInteraction = false
     
+    let pinAnnotation = MKPointAnnotation()
+    
+    var lastMapCenter: CLLocationCoordinate2D? = nil
+ 
     // MARK: Options
     
     /// local access to NSUserDefaults 
     var userOptions = SnapLocationOptions()
-    
+
     // MARK: Initialize
     
     override func viewDidLoad() {
@@ -77,10 +68,11 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         locationManager.startUpdatingLocation()
         
         // init & add mapkit
+        mapKitView.delegate = self
         mapKitView.frame = view.bounds
-        mapKitView.showsUserLocation = true
         mapKitView.zoomEnabled = true
         mapKitView.scrollEnabled = true
+        lastMapCenter = self.mapKitView.centerCoordinate
         view.addSubview(mapKitView)
         
         // init & add info overlay
@@ -90,64 +82,43 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         infoScreen.adjustsFontSizeToFitWidth = true
         view.addSubview(infoScreen)
         
-        setupButtons()
-        
-        resetButtonsOnZTop()
+        toolbarStackView.setupActions(self, settings: "settingsTap:", snap: "snapTap:", locate: "locateTap:",  history: "historyTap:")
+        view.addSubview(toolbarStackView)
+        toolbarStackView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
+        toolbarStackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -10).active = true
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        if userOptions.getMapType() == MKMapType.Standard {
+            return UIStatusBarStyle.Default
+        }
+        return UIStatusBarStyle.LightContent
     }
     
     override func viewWillAppear(animated: Bool) {
-        // turn off navbar because settings turns it on
+        // turn off navbar because child screens turn it on
         navigationController?.navigationBarHidden = true
         
-        mapKitView.mapType = userOptions.mapTypes[userOptions.mapType]
+        mapKitView.mapType = userOptions.getMapType()
         
-        // if the placemark is defined use it to redisplay the info which may have changed when returning from settings page
-        if let pm = placemark {
+        // redisplay the info which may have changed when returning from settings page
+        // unless snapLocationObject has been deleted
+        if snapLocationObject.invalidated {
+            snapLocationObject = SnapLocationObject()
+            infoScreen.hidden = true
+        } else {
             infoTextToPaste = ""
-            buildInfoScreen(pm, size: view.bounds.size)
+            buildInfoScreen(snapLocationObject, size: view.bounds.size)
         }
+    
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         mapKitView.frame.size = size
         
         // recalculte info screen for new size
-        if let pm = placemark {
-            infoTextToPaste = ""
-            buildInfoScreen(pm, size: size)
-        }
-    }
-    
-    /// initialize screen's buttons
-    private func setupButtons() {
-        buttonStackView.axis = UILayoutConstraintAxis.Horizontal
-        buttonStackView.distribution = UIStackViewDistribution.Fill
-        buttonStackView.alignment = UIStackViewAlignment.Center
-        buttonStackView.spacing = 30.0
-        
-        locateButton.title = "Locate!"
-        locateButton.fontsize = 18.0
-        locateButton.raised = true
-        locateButton.mainColor = UIColor(red: 0, green: 255, blue: 0, alpha: 0.6)
-        locateButton.addTarget(self, action: "locateTap:", forControlEvents: UIControlEvents.TouchUpInside)
-        
-        snapButton.title = "Snap!"
-        snapButton.fontsize = 18.0
-        snapButton.raised = true
-        snapButton.mainColor = UIColor(red: 255, green: 0, blue: 0, alpha: 0.6)
-        snapButton.addTarget(self, action: "snapTap:", forControlEvents: UIControlEvents.TouchUpInside)
-        
-        settingsButton.title = "Settings!"
-        settingsButton.fontsize = 13.0
-        settingsButton.raised = true
-        settingsButton.mainColor = UIColor(red: 0, green: 0, blue: 255, alpha: 0.6)
-        settingsButton.addTarget(self, action: "settingsTap:", forControlEvents: UIControlEvents.TouchUpInside)
-        
-        buttonStackView.addArrangedSubview(snapButton)
-        buttonStackView.addArrangedSubview(locateButton)
-        buttonStackView.addArrangedSubview(settingsButton)
-        
-        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
+        infoTextToPaste = ""
+        buildInfoScreen(snapLocationObject, size: size)
     }
     
     // MARK: Button Actions
@@ -157,36 +128,44 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
     func locateTap(sender: JGTapButton) {
         
         infoTextToPaste = ""
-        mapKitView.showsUserLocation = true
-        locationManager.startUpdatingLocation()
         
-        fullScreenBlurredImageView.removeFromSuperview()
-        blurredImageEffectContainer.removeFromSuperview()
-        
-        userOptions.saveToPhotosAlbum ? snapButton.show() : snapButton.hide()
+        if userOptions.locateActionIndex.value() == 0 {
+            locationManager.startUpdatingLocation()
+        } else {
+            locationFromScreen()
+        }
     }
     
     /// alerts user with shutter sound feedback and call func to process screen capture
     func snapTap(sender: JGTapButton) {
         
-        snapButton.hide()
-        locateButton.hide()
-        settingsButton.hide()
+        toolbarStackView.hidden = true
         
-        mapKitView.showsUserLocation = userOptions.zoomLevel < userOptions.zoomLevelToHideUserLocation ? false : true
-        
+        // move to top for screen shot
         infoScreen.frame.origin = CGPoint(x: 0, y: 0)
         
         AudioServicesPlaySystemSound(cameraShutterSoundID)
-        snapScreenShot()
-        
-        
+        saveScreenShot()
         
         // leave a little extra on top when in portrait, zero for landscape
         let topMargin: CGFloat = view.bounds.size.width > view.bounds.size.height ? 0 : 20
         infoScreen.frame.origin = CGPoint(x: 0, y: topMargin)
         
-        mapKitView.showsUserLocation = false
+        addHistory()
+        
+        toolbarStackView.hidden = false
+        
+        toolbarStackView.buttonsHidden(settings: false, snap: true, locate: false, history: false)
+        
+        
+    }
+    
+    func addHistory() {
+        var historyData: HistoryDataSource!
+        if userOptions.saveToHistory.value() {
+            historyData = HistoryDataSource()
+            historyData.addNextLocationWithId(snapLocationObject)
+        }
     }
     
     /// settings button tapped, call the option settings display controller
@@ -194,13 +173,31 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         performSegueWithIdentifier("settings", sender: self)
     }
     
+    /// history button tapped, call the option settings display controller
+    func historyTap(sender: JGTapButton) {
+        performSegueWithIdentifier("history", sender: self)
+    }
+    
     // MARK: Functions
     
     /// the location manager's main function to get the current location, load the data, center the map, call the info screen builder
     internal func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        reverseGeocode(manager.location!)
+        self.centerMapByLocation(manager.location!, zoomLevel: self.userOptions.zoomLevel.value())
+    }
+    
+    internal func locationFromScreen() {
+        lastMapCenter = mapKitView.centerCoordinate
+        let location = CLLocation(latitude: (lastMapCenter?.latitude)!, longitude: (lastMapCenter?.longitude)!)
+        infoTextToPaste = ""
+        reverseGeocode(location)
+        self.centerMapByLocation(location, zoomLevel: 0)
+    }
+    
+    internal func reverseGeocode(location: CLLocation) {
         
-        dispatch_async(dispatch_get_main_queue(),{
-            CLGeocoder().reverseGeocodeLocation(manager.location!, completionHandler: { (placemarks, error) -> Void in
+        dispatch_async(dispatch_get_main_queue()) {
+            CLGeocoder().reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
                 
                 guard (error == nil),
                     let placemarks = placemarks
@@ -210,20 +207,53 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
                 }
                 
                 if let pm = placemarks.first {
-                    self.placemark = pm
-                    let currentLocation = CLLocation(latitude: self.placemark.location!.coordinate.latitude, longitude: self.placemark.location!.coordinate.longitude)
-                    self.centerMapByLocation(currentLocation)
-                    self.buildInfoScreen(self.placemark, size: self.view.bounds.size)
+                    // prevent multiple hits
+                    if self.infoTextToPaste == "" {
+                        
+                        self.locationManager.stopUpdatingLocation()
+                        
+                        self.snapLocationObject = self.loadPlacemarkToLocationObject(pm)
+                        
+                        self.buildInfoScreen(self.snapLocationObject, size: self.view.bounds.size)
+                        
+                        if self.userOptions.displayLocationPin.value() {
+                            self.displayLocationPin(self.snapLocationObject)
+                        } else {
+                            self.noLocationPin()
+                        }
+                        
+                        self.toolbarStackView.buttonsHidden(settings: false, snap: false, locate: false, history: false)
+                    }
                 } else {
                     print("Error with placemarks")
                 }
             })
-        })
+        }
         
+    }
+
+    private func displayLocationPin(snapLocationObject: SnapLocationObject) {
+        pinAnnotation.coordinate = CLLocationCoordinate2D(
+            latitude: Double(snapLocationObject.latitude)!,
+            longitude: Double(snapLocationObject.longitude)!
+        )
+        
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "h:mm a"
+        let timestamp = formatter.stringFromDate(snapLocationObject.timestamp)
+        pinAnnotation.title = timestamp
+        mapKitView.addAnnotation(pinAnnotation)
+    }
+    
+    private func noLocationPin() {
+        mapKitView.removeAnnotation(pinAnnotation)
     }
     
     /// capture the screen and save it
-    private func snapScreenShot() {
+    private func saveScreenShot() {
+        
+        // first be sure save option is on
+        guard userOptions.saveToPhotosAlbum.value() else {return}
         
         //Create the UIImage
         UIGraphicsBeginImageContext(view.bounds.size)
@@ -232,101 +262,133 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         let image = UIGraphicsGetImageFromCurrentImageContext()
         
         //Save it to the camera roll
-        if userOptions.saveToPhotosAlbum { UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil) }
+        if userOptions.saveToPhotosAlbum.value() { UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil) }
         
         UIGraphicsEndImageContext()
-        
-        (fullScreenBlurredImageView, blurredImageEffectContainer) = makeBlurredImage(viewContainer: view, image: image)
     }
-    
-    /// center the map so user location is in the middle of the screen
-    /// also zoomlevel is processed here
-    private func centerMapByLocation(location: CLLocation) {
+
+    /// center the map so location is in the middle of the screen
+    /// if zoomLevel is zero then use current map radius otherwise use zoomLevel to calculate the radius
+    private func centerMapByLocation(location: CLLocation, zoomLevel: Int) {
         
-        // calulate the regionRadious number using the zoomLevel set by user & zoomfactor literal
-        // smaller number is a closer-in zoom level
-        let regionRadius = Double(userOptions.zoomLevel) * zoomFactor
+        var regionRadius: CLLocationDistance!
+        
+        if zoomLevel == 0 {
+            regionRadius = getCurrentRadius()
+        } else {
+            // calulate the regionRadious number using the zoomLevel set by user & zoomfactor literal
+            // smaller number is a closer-in zoom level
+            regionRadius = Double(zoomLevel) * zoomFactor
+        }
         
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate,
             regionRadius, regionRadius)
+        
         mapKitView.setRegion(coordinateRegion, animated: true)
     }
     
-    /// build the info display screen using the placemark data provided by the location manager
-    /// - note: infoTextToPaste must be null for info update to begin
-    private func buildInfoScreen(placemark: CLPlacemark, size: CGSize){
+    func getCurrentRadius() -> CLLocationDistance {
+        let centerCoor: CLLocationCoordinate2D = mapKitView.centerCoordinate
+        let centerLocation: CLLocation = CLLocation(latitude: centerCoor.latitude, longitude: centerCoor.longitude)
+        let topCenterCoor: CLLocationCoordinate2D = getTopCenterCoordinate()
+        let topCenterLocation: CLLocation = CLLocation(latitude: topCenterCoor.latitude, longitude: topCenterCoor.longitude)
+        let radius = centerLocation.distanceFromLocation(topCenterLocation)
+        return radius
+    }
+    
+    /// get CLLocationCoordinate2D from MapKit frame's CGPoint
+    func getTopCenterCoordinate() -> CLLocationCoordinate2D {
+        let topCenterCoor: CLLocationCoordinate2D = self.mapKitView.convertPoint(CGPointMake(self.mapKitView.bounds.size.width / 2.0, 0), toCoordinateFromView: self.mapKitView)
+        return topCenterCoor
+    }
+
+    private func loadPlacemarkToLocationObject(placemark: CLPlacemark) -> SnapLocationObject {
         
-        if infoTextToPaste == "" {
-            
-            locationManager.stopUpdatingLocation()
-            
-            infoScreen.numberOfLines = 1
-            
-            if userOptions.includeAddressInfo {
-                addInfoText(" street: \(placemark.thoroughfare ?? "")")
-            }
-            
-            if userOptions.includeLocationInfo {
-                addInfoText(" location: \(placemark.locality! ?? ""), \(placemark.administrativeArea! ?? "")")
-            }
-            
-            if userOptions.includeZipcodeInfo {
-                addInfoText(" zipcode: \(placemark.postalCode ?? "")")
-            }
-            
-            if userOptions.includeLatitudeAndLongitudeInfo {
-                let precision = "%.5f"
-                let latitude = String(format: precision, placemark.location!.coordinate.latitude  ?? "")
-                addInfoText(" latitude: \(latitude)")
-                
-                let longitude = String(format: precision, placemark.location!.coordinate.longitude  ?? "")
-                addInfoText(" longitude: \(longitude)")
-            }
-            
-            if userOptions.includeGPSDateTimeInfo {
-                let formatter = NSDateFormatter()
-                formatter.dateFormat = "M/d/yy h:mm a"
-                let timestamp = formatter.stringFromDate(placemark.location!.timestamp)
-                addInfoText(" gpstime: \(timestamp)")
-            }
-            
-            if userOptions.includeAltitudeInfo {
-                addInfoText(" altitude: \(placemark.location!.altitude)")
-            }
-            
-            if userOptions.includeVerticalAccuracyInfo {
-                addInfoText(" vertical accuracy: \(placemark.location!.verticalAccuracy)")
-            }
-            
-            if userOptions.includeHorizontalAccuracyInfo {
-                addInfoText(" horizontal accuracy: \(placemark.location!.horizontalAccuracy)")
-            }
-            
-            if userOptions.saveInfoTextToPasteboard {
-                UIPasteboard.generalPasteboard().string = infoTextToPaste
-            }
-            
-            if infoTextToPaste != "" {
-            
-                infoScreen.text = infoTextToPaste
-                
-                let infoScreenMaxHeight = size.height * 0.32
-                var infoScreenHeight = CGFloat(infoScreen.numberOfLines * 24)
-                
-                if infoScreenHeight > infoScreenMaxHeight { infoScreenHeight = infoScreenMaxHeight }
-                
-                // leave a little extra on top when in portrait, zero for landscape
-                let topMargin: CGFloat = size.width > size.height ? 0 : 20
-                infoScreen.frame = CGRectMake(0, topMargin, size.width, infoScreenHeight)
-                
-                infoScreen.show()
-                
-            } else {
-                // hide the screen there's nothing to show
-                infoScreen.hide()
-            }
+        let snapLocationObject = SnapLocationObject()
+
+        snapLocationObject.timestamp = placemark.location!.timestamp
+        snapLocationObject.street = placemark.thoroughfare ?? ""
+        snapLocationObject.location = "\(placemark.locality ?? ""), \(placemark.administrativeArea ?? "")"
+        snapLocationObject.zipcode = placemark.postalCode ?? ""
+        
+        let precision = "%.5f"
+        snapLocationObject.latitude = String(format: precision, placemark.location!.coordinate.latitude  ?? "")
+        snapLocationObject.longitude = String(format: precision, placemark.location!.coordinate.longitude  ?? "")
+        
+        snapLocationObject.altitude = placemark.location!.altitude ?? 0
+        snapLocationObject.verticalAccuracy = placemark.location!.verticalAccuracy ?? 0
+        snapLocationObject.horizontalAccuracy = placemark.location!.horizontalAccuracy  ?? 0
+        
+        return snapLocationObject
+    }
+    
+    
+    /// build the info display screen using snapLocationObject
+    private func buildInfoScreen(snapLocationObject: SnapLocationObject, size: CGSize) {
+        
+        // require loaded data object and cleared text field inwhich to build
+        guard snapLocationObject.location != "" && infoTextToPaste == "" else { return }
+        
+        infoScreen.numberOfLines = 1
+        
+        if userOptions.includeAddressInfo.value() {
+            addInfoText("street: \(snapLocationObject.street)")
         }
         
+        if userOptions.includeLocationInfo.value() {
+            addInfoText("location: \(snapLocationObject.location)")
+        }
+        
+        if userOptions.includeZipcodeInfo.value() {
+            addInfoText("zipcode: \(snapLocationObject.zipcode)")
+        }
+        
+        if userOptions.includeLatitudeAndLongitudeInfo.value() {
+            addInfoText("latitude: \(snapLocationObject.latitude)")
+            addInfoText("longitude: \(snapLocationObject.longitude)")
+        }
+        
+        if userOptions.includeGPSDateTimeInfo.value() {
+            let formatter = NSDateFormatter()
+            formatter.dateFormat = "M/d/yy h:mm a"
+            let timestamp = formatter.stringFromDate(snapLocationObject.timestamp)
+            addInfoText("gpstime: \(timestamp)")
+        }
+        
+        if userOptions.includeAltitudeInfo.value() {
+            addInfoText("altitude: \(snapLocationObject.altitude)")
+        }
+        
+        if userOptions.includeVerticalAccuracyInfo.value() {
+            addInfoText("vertical accuracy: \(snapLocationObject.verticalAccuracy)")
+        }
+        
+        if userOptions.includeHorizontalAccuracyInfo.value() {
+            addInfoText("horizontal accuracy: \(snapLocationObject.horizontalAccuracy)")
+        }
+        
+        if userOptions.saveToPasteboard.value() {
+            UIPasteboard.generalPasteboard().string = infoTextToPaste
+        }
+        
+        if infoTextToPaste != "" {
+        
+            infoScreen.text = infoTextToPaste
+            
+            let infoScreenMaxHeight = size.height * 0.32
+            var infoScreenHeight = CGFloat(infoScreen.numberOfLines * 24)
+            
+            if infoScreenHeight > infoScreenMaxHeight { infoScreenHeight = infoScreenMaxHeight }
+            
+            // leave a little extra on top when in portrait, zero for landscape
+            let topMargin: CGFloat = size.width > size.height ? 0 : 20
+            infoScreen.frame = CGRectMake(0, topMargin, size.width, infoScreenHeight)
+            infoScreen.hidden = false
+            
+        } else {
+            // hide the screen there's nothing to show
+            infoScreen.hidden = true
+        }
     }
     
     /// helper to format info text lines
@@ -341,74 +403,64 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         print("Error:" + error.localizedDescription)
     }
     
-    /// creates a blurred image
-    /// - returns: tuple => image & effect container
-    /// - parameter viewContainer: the main view container
-    /// - parameter image: the image to blur
-    /// - parameter offsetOriginY: top of screen margin offset
-    private func makeBlurredImage(viewContainer viewContainer: UIView, image: UIImage, offsetOriginY: CGFloat = 20) -> (UIImageView, UIView) {
-        
-        let transparency: CGFloat = 0.85
-        let fadeInTime: NSTimeInterval = 3.0
-        let blurEffect = UIBlurEffect(style: .ExtraLight)
-        
-        let imageView = UIImageView()
-        
-        var offsetScreenBounds = viewContainer.bounds
-        offsetScreenBounds.origin.y = offsetOriginY
-        
-        imageView.frame = offsetScreenBounds
-        imageView.image = image
-        
-        viewContainer.addSubview(imageView)
-        
-        let effectContainer = UIView(frame: offsetScreenBounds)
-        viewContainer.addSubview(effectContainer)
-        
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = effectContainer.bounds
-        
-        effectContainer.addSubview(blurEffectView)
-        
-        dispatch_async(dispatch_get_main_queue(),{
-            UIView.animateWithDuration(fadeInTime, animations: {
-                effectContainer.alpha = transparency
-                blurEffectView.effect = blurEffect
-                }, completion: {(success: Bool) -> () in
-                    self.resetButtonsOnZTop()
-                    UIView.animateWithDuration(1.0) {
-                        self.locateButton.show()
-                        self.settingsButton.show()
-                    }
-            })
-        })
-
-        return (imageView, effectContainer)
-    }
     
     /// moves the buttons to the top of the z-order
     private func resetButtonsOnZTop() {
-        buttonStackView.removeFromSuperview()
-        view.addSubview(buttonStackView)
+        toolbarStackView.removeFromSuperview()
+        view.addSubview(toolbarStackView)
         
-        buttonStackView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
-        buttonStackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -10).active = true
+        toolbarStackView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor).active = true
+        toolbarStackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -10).active = true
     }
     
+    /// private class the overrides text insets inside label
+    private class UILabelInseted: UILabel {
+        override func drawTextInRect(rect: CGRect) {
+            super.drawTextInRect(UIEdgeInsetsInsetRect(rect, UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)))
+        }
+    }
+    
+    /// Look through gesture recognizers to determine whether this region change is from user interaction
+    /// - attribution: headcrash & mobi on stackoverflow
+    private func mapViewRegionDidChangeFromUserInteraction() -> Bool {
+        let view = self.mapKitView.subviews[0]
+        if let gestureRecognizers = view.gestureRecognizers {
+            for recognizer in gestureRecognizers {
+                if( recognizer.state == UIGestureRecognizerState.Began || recognizer.state == UIGestureRecognizerState.Ended ) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        mapChangedFromUserInteraction = mapViewRegionDidChangeFromUserInteraction()
+        if (mapChangedFromUserInteraction) {
+            infoScreen.hidden = true
+            toolbarStackView.buttonsHidden(settings: false, snap: true, locate: false, history: false)
+        }
+    }
+
 }
 
-private extension UIView
-{
-    /// hide the view by setting alpha to 0
-    func hide() {
-        self.alpha = 0.0
-    }
-    
-    /// display the view  by setting alpha to 1
-    func show() {
-        self.alpha = 1.0
-    }
-    
+extension CLLocationCoordinate2D: Equatable{}
+
+public func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+    return lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
 }
+
+// MARK: JGSettingsTableController Extension
+
+// turn on the nav bar for the settings tableview
+extension JGSettingsTableController {
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.navigationBarHidden = false
+    }
+}
+
+
+
+
 
 
