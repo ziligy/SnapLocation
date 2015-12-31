@@ -7,6 +7,7 @@
 
 import UIKit
 import MapKit
+import JGSettingsManager
 
 /// settings storage model
 struct SnapLocationOptions {
@@ -51,17 +52,20 @@ struct SnapLocationOptions {
 }
 
 
-//class SettingsTableData: JGSettingsTableController, SettingsSections {
-
-extension JGSettingsTableController {
-
+class SettingsTableData: JGSettingsTableController, SettingsSectionsData {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.tableSections = loadSectionsConfiguration()
+    }
+    
     /// loads and returns the sections array 
     /// used by JGSettingManager - TableController to build settings display
     func loadSectionsConfiguration() -> [Section] {
         
         let userDefaults = SnapLocationOptions()
         
-        tableSections = [
+        let sections = [
             
             Section (
                 header: "Map Display",
@@ -115,11 +119,9 @@ extension JGSettingsTableController {
                 ]
             )
 
-        
-        
         ]
 
-        return tableSections
+        return sections
     }
     
 }

@@ -71,19 +71,18 @@ $ git clone https://github.com/ziligy/SnapLocation.git
 $ cd SnapLocation
 ```
 
-3) Install pods
+3) Install dependencies via Carthage
 
 ```
-$ pod install
+$ carthage update
 ```
-
-Use SnapLocation.xcworkspace to open project
 
 ## Dependencies
 - [Realm](https://github.com/realm/realm-cocoa)
+- [JGSettingsManager](https://github.com/ziligy/JGSettingsManager)
 
 ## Requirements
 1. Xcode 7.2
-2. Swift 2.0
-3. iOS 9.0+
+2. Swift 2.1
+3. iOS 9.2+
 

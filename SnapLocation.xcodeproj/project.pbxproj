@@ -7,39 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C05F91FB3000435BC04D39C /* Pods_SnapLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197F88953039ECDD667CF7F2 /* Pods_SnapLocation.framework */; };
 		CE04AD831C11DF5900F27708 /* History.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE04AD811C11DF5900F27708 /* History.storyboard */; };
 		CE04AD851C11EC5F00F27708 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04AD841C11EC5F00F27708 /* HistoryTableViewController.swift */; };
 		CE04AD881C12273E00F27708 /* BlurredBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04AD871C12273E00F27708 /* BlurredBackgroundView.swift */; };
 		CE1218CD1C15A83600914700 /* ToolbarStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1218CC1C15A83600914700 /* ToolbarStackView.swift */; };
 		CE13F7911C1087AD006291E3 /* SnapLocationObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE13F7901C1087AD006291E3 /* SnapLocationObject.swift */; };
 		CE333F431BF7654D00397016 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE333F421BF7654D00397016 /* Settings.storyboard */; };
+		CE33974B1C108A3800567499 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE3397491C108A3800567499 /* Realm.framework */; };
+		CE33974C1C108A3800567499 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE33974A1C108A3800567499 /* RealmSwift.framework */; };
 		CE57BF641BECBC49006D16C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE57BF631BECBC49006D16C3 /* AppDelegate.swift */; };
 		CE57BF691BECBC49006D16C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE57BF671BECBC49006D16C3 /* Main.storyboard */; };
 		CE57BF6B1BECBC49006D16C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE57BF6A1BECBC49006D16C3 /* Assets.xcassets */; };
 		CE57BF6E1BECBC49006D16C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE57BF6C1BECBC49006D16C3 /* LaunchScreen.storyboard */; };
 		CE57BF761BECBC6D006D16C3 /* SnapLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE57BF751BECBC6D006D16C3 /* SnapLocationViewController.swift */; };
 		CE57BF781BECBC88006D16C3 /* JGTapButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE57BF771BECBC88006D16C3 /* JGTapButton.swift */; };
+		CEAEDB591C350F0900301673 /* JGSettingsManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEAEDB581C350F0900301673 /* JGSettingsManager.framework */; };
 		CEE78B501C12E57500C7145D /* HistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE78B4F1C12E57500C7145D /* HistoryTableViewCell.swift */; };
 		CEE78B521C13340200C7145D /* HistoryDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE78B511C13340200C7145D /* HistoryDatasource.swift */; };
-		CEFD29411C2AEF2400970C0A /* JGUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFD293E1C2AEF2400970C0A /* JGUserDefault.swift */; };
-		CEFD29421C2AEF2400970C0A /* JGSettingsTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFD293F1C2AEF2400970C0A /* JGSettingsTableController.swift */; };
 		CEFD29431C2AEF2400970C0A /* SettingsTableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFD29401C2AEF2400970C0A /* SettingsTableData.swift */; };
-		CEFD29481C2AEF7900970C0A /* SwitchTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFD29441C2AEF7900970C0A /* SwitchTableCell.swift */; };
-		CEFD29491C2AEF7900970C0A /* TextTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFD29451C2AEF7900970C0A /* TextTableCell.swift */; };
-		CEFD294A1C2AEF7900970C0A /* StepperTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFD29461C2AEF7900970C0A /* StepperTableCell.swift */; };
-		CEFD294B1C2AEF7900970C0A /* SegmentedControlTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFD29471C2AEF7900970C0A /* SegmentedControlTableCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		197F88953039ECDD667CF7F2 /* Pods_SnapLocation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SnapLocation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C9CF2B964B9DCA2196C9C4A2 /* Pods-SnapLocation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapLocation.release.xcconfig"; path = "Pods/Target Support Files/Pods-SnapLocation/Pods-SnapLocation.release.xcconfig"; sourceTree = "<group>"; };
 		CE04AD821C11DF5900F27708 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/History.storyboard; sourceTree = "<group>"; };
 		CE04AD841C11EC5F00F27708 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
 		CE04AD871C12273E00F27708 /* BlurredBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurredBackgroundView.swift; sourceTree = "<group>"; };
 		CE1218CC1C15A83600914700 /* ToolbarStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolbarStackView.swift; sourceTree = "<group>"; };
 		CE13F7901C1087AD006291E3 /* SnapLocationObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapLocationObject.swift; sourceTree = "<group>"; };
 		CE333F421BF7654D00397016 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		CE3397491C108A3800567499 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
+		CE33974A1C108A3800567499 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/iOS/RealmSwift.framework; sourceTree = "<group>"; };
 		CE57BF601BECBC49006D16C3 /* SnapLocation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapLocation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE57BF631BECBC49006D16C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CE57BF681BECBC49006D16C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -48,16 +44,10 @@
 		CE57BF6F1BECBC49006D16C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE57BF751BECBC6D006D16C3 /* SnapLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapLocationViewController.swift; sourceTree = "<group>"; };
 		CE57BF771BECBC88006D16C3 /* JGTapButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JGTapButton.swift; sourceTree = "<group>"; };
+		CEAEDB581C350F0900301673 /* JGSettingsManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JGSettingsManager.framework; path = Carthage/Build/iOS/JGSettingsManager.framework; sourceTree = "<group>"; };
 		CEE78B4F1C12E57500C7145D /* HistoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewCell.swift; sourceTree = "<group>"; };
 		CEE78B511C13340200C7145D /* HistoryDatasource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDatasource.swift; sourceTree = "<group>"; };
-		CEFD293E1C2AEF2400970C0A /* JGUserDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JGUserDefault.swift; sourceTree = "<group>"; };
-		CEFD293F1C2AEF2400970C0A /* JGSettingsTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JGSettingsTableController.swift; sourceTree = "<group>"; };
 		CEFD29401C2AEF2400970C0A /* SettingsTableData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableData.swift; sourceTree = "<group>"; };
-		CEFD29441C2AEF7900970C0A /* SwitchTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchTableCell.swift; sourceTree = "<group>"; };
-		CEFD29451C2AEF7900970C0A /* TextTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextTableCell.swift; sourceTree = "<group>"; };
-		CEFD29461C2AEF7900970C0A /* StepperTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepperTableCell.swift; sourceTree = "<group>"; };
-		CEFD29471C2AEF7900970C0A /* SegmentedControlTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentedControlTableCell.swift; sourceTree = "<group>"; };
-		FAC2FC081CE41DE037DDA91B /* Pods-SnapLocation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapLocation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SnapLocation/Pods-SnapLocation.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,30 +55,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C05F91FB3000435BC04D39C /* Pods_SnapLocation.framework in Frameworks */,
+				CE33974B1C108A3800567499 /* Realm.framework in Frameworks */,
+				CE33974C1C108A3800567499 /* RealmSwift.framework in Frameworks */,
+				CEAEDB591C350F0900301673 /* JGSettingsManager.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9D39B2D4B416FD05278CE7E0 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				197F88953039ECDD667CF7F2 /* Pods_SnapLocation.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		B349D61E31279F94C8A02C0A /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				FAC2FC081CE41DE037DDA91B /* Pods-SnapLocation.debug.xcconfig */,
-				C9CF2B964B9DCA2196C9C4A2 /* Pods-SnapLocation.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		CE333F441BF765E600397016 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
@@ -132,11 +107,11 @@
 			isa = PBXGroup;
 			children = (
 				CE57BF621BECBC49006D16C3 /* SnapLocation */,
-				CEFD294D1C2AEFB000970C0A /* JGSettingsManager */,
 				CEFD294E1C2AFA8400970C0A /* JGToolBox */,
+				CE3397491C108A3800567499 /* Realm.framework */,
+				CE33974A1C108A3800567499 /* RealmSwift.framework */,
+				CEAEDB581C350F0900301673 /* JGSettingsManager.framework */,
 				CE57BF611BECBC49006D16C3 /* Products */,
-				B349D61E31279F94C8A02C0A /* Pods */,
-				9D39B2D4B416FD05278CE7E0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -171,28 +146,6 @@
 			name = Support;
 			sourceTree = "<group>";
 		};
-		CEFD294C1C2AEF8E00970C0A /* Settings Cells */ = {
-			isa = PBXGroup;
-			children = (
-				CEFD29441C2AEF7900970C0A /* SwitchTableCell.swift */,
-				CEFD29451C2AEF7900970C0A /* TextTableCell.swift */,
-				CEFD29461C2AEF7900970C0A /* StepperTableCell.swift */,
-				CEFD29471C2AEF7900970C0A /* SegmentedControlTableCell.swift */,
-			);
-			name = "Settings Cells";
-			sourceTree = "<group>";
-		};
-		CEFD294D1C2AEFB000970C0A /* JGSettingsManager */ = {
-			isa = PBXGroup;
-			children = (
-				CEFD293E1C2AEF2400970C0A /* JGUserDefault.swift */,
-				CEFD293F1C2AEF2400970C0A /* JGSettingsTableController.swift */,
-				CEFD294C1C2AEF8E00970C0A /* Settings Cells */,
-			);
-			name = JGSettingsManager;
-			path = SnapLocation;
-			sourceTree = "<group>";
-		};
 		CEFD294E1C2AFA8400970C0A /* JGToolBox */ = {
 			isa = PBXGroup;
 			children = (
@@ -209,12 +162,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE57BF721BECBC49006D16C3 /* Build configuration list for PBXNativeTarget "SnapLocation" */;
 			buildPhases = (
-				CBB629A64A3E96162ADCBBB4 /* Check Pods Manifest.lock */,
 				CE57BF5C1BECBC49006D16C3 /* Sources */,
 				CE57BF5D1BECBC49006D16C3 /* Frameworks */,
 				CE57BF5E1BECBC49006D16C3 /* Resources */,
-				22A975F65433AF5137C4E90B /* Embed Pods Frameworks */,
-				AED803521E47651A9DAD6BCD /* Copy Pods Resources */,
+				CE33974D1C108A4300567499 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -274,50 +225,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		22A975F65433AF5137C4E90B /* Embed Pods Frameworks */ = {
+		CE33974D1C108A4300567499 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RealmSwift.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/JGSettingsManager.framework",
 			);
-			name = "Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SnapLocation/Pods-SnapLocation-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AED803521E47651A9DAD6BCD /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SnapLocation/Pods-SnapLocation-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CBB629A64A3E96162ADCBBB4 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -329,18 +251,12 @@
 				CE1218CD1C15A83600914700 /* ToolbarStackView.swift in Sources */,
 				CEE78B501C12E57500C7145D /* HistoryTableViewCell.swift in Sources */,
 				CE57BF641BECBC49006D16C3 /* AppDelegate.swift in Sources */,
-				CEFD29411C2AEF2400970C0A /* JGUserDefault.swift in Sources */,
-				CEFD29421C2AEF2400970C0A /* JGSettingsTableController.swift in Sources */,
 				CE04AD881C12273E00F27708 /* BlurredBackgroundView.swift in Sources */,
 				CEE78B521C13340200C7145D /* HistoryDatasource.swift in Sources */,
 				CEFD29431C2AEF2400970C0A /* SettingsTableData.swift in Sources */,
-				CEFD294B1C2AEF7900970C0A /* SegmentedControlTableCell.swift in Sources */,
-				CEFD294A1C2AEF7900970C0A /* StepperTableCell.swift in Sources */,
 				CE57BF761BECBC6D006D16C3 /* SnapLocationViewController.swift in Sources */,
 				CE13F7911C1087AD006291E3 /* SnapLocationObject.swift in Sources */,
-				CEFD29491C2AEF7900970C0A /* TextTableCell.swift in Sources */,
 				CE04AD851C11EC5F00F27708 /* HistoryTableViewController.swift in Sources */,
-				CEFD29481C2AEF7900970C0A /* SwitchTableCell.swift in Sources */,
 				CE57BF781BECBC88006D16C3 /* JGTapButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -460,7 +376,6 @@
 		};
 		CE57BF731BECBC49006D16C3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FAC2FC081CE41DE037DDA91B /* Pods-SnapLocation.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -468,6 +383,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = SnapLocation/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ziligy.SnapLocation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -476,7 +392,6 @@
 		};
 		CE57BF741BECBC49006D16C3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C9CF2B964B9DCA2196C9C4A2 /* Pods-SnapLocation.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -484,6 +399,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = SnapLocation/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ziligy.SnapLocation;
 				PRODUCT_NAME = "$(TARGET_NAME)";

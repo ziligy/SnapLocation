@@ -450,10 +450,10 @@ public func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Boo
     return lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
 }
 
-// MARK: JGSettingsTableController Extension
+// MARK: SettingsTable Extension
 
 // turn on the nav bar for the settings tableview
-extension JGSettingsTableController {
+extension SettingsTableData {
     override func viewWillAppear(animated: Bool) {
         self.navigationController?.navigationBarHidden = false
     }

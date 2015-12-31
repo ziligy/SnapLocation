@@ -1,3 +1,5 @@
 Pods/
 Notes.md
 Podfile.lock
+Carthage/
+Cartfile.resolved
