@@ -1,6 +1,5 @@
 //
 //  ToolbarStackView.swift
-//  SnapLocation
 //
 //  Created by Jeff on 12/7/15.
 //  Copyright © 2015 Jeff Greenberg. All rights reserved.
@@ -21,7 +20,6 @@ class ToolbarStackView: UIStackView {
     
     /// button to bring up the history screen
     private let historyButton  = JGTapButton(frame: CGRect(x: 0,y: 0,width: 60,height: 60))
-    
     
     func setupActions(target: AnyObject?, settings: Selector,  snap: Selector, locate: Selector, history: Selector) {
         self.axis = UILayoutConstraintAxis.Horizontal

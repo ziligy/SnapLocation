@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 
-
 /// history data source - realm database
 class HistoryDataSource {
     
@@ -59,7 +58,12 @@ class HistoryDataSource {
         return locations.count
     }
     
-    /// get and return location as SnapLocationObject
+    /// get & return location as SnapLocationObject based on primary key -- database id
+    internal func getHistoryDataByPrimaryKey(id: Int) -> SnapLocationObject? {
+        return (realm.objectForPrimaryKey(SnapLocationObject.self, key: id))
+    }
+    
+    /// get and return location as SnapLocationObject based on cell index
     /// - parameter index: as integer, used to sync with cell
     /// - returns: location as SnapLocationObject or nil
     internal func getHistoryDataByIndex(index: Int) -> SnapLocationObject? {

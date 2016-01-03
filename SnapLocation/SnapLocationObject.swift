@@ -21,6 +21,7 @@ class SnapLocationObject: Object {
     dynamic var altitude: Double = 0
     dynamic var verticalAccuracy: Double = 0
     dynamic var horizontalAccuracy: Double = 0
+    dynamic var viewRadius: Double = 0
         
     override class func primaryKey() -> String? {
         return "id"

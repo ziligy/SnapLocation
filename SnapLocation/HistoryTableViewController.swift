@@ -8,13 +8,19 @@
 
 import UIKit
 
+protocol HistoryTableDelegate{
+    func didSelectHistorySnapLocation(snapLocation: SnapLocationObject)
+}
 
 class HistoryTableViewController: UITableViewController
 {
     private var historyData = HistoryDataSource()
     
+    internal var delegateForHistorySelect: HistoryTableDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.navigationController?.navigationBarHidden = false
         self.navigationController?.navigationBar.barStyle = UIBarStyle.Black
         
@@ -46,6 +52,17 @@ class HistoryTableViewController: UITableViewController
             tableView.endUpdates()
         }
     }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
+            let selectedCell = tableView.cellForRowAtIndexPath(indexPath) as! HistoryTableViewCell
+        
+        let snapLocation = historyData.getHistoryDataByPrimaryKey( selectedCell.snapLocationId )
+        
+        self.delegateForHistorySelect?.didSelectHistorySnapLocation(snapLocation!)
+        
+        navigationController?.popViewControllerAnimated(true)
+    }
+
     
     func clearAll() {
         

@@ -9,9 +9,10 @@ import UIKit
 import CoreLocation
 import MapKit
 import AudioToolbox
-import RealmSwift
 
-class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate, HistoryTableDelegate {
+    
+    var historyTable: HistoryTableViewController!
     
     // MARK: View Objects
     
@@ -156,13 +157,15 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         toolbarStackView.hidden = false
         
         toolbarStackView.buttonsHidden(settings: false, snap: true, locate: false, history: false)
-        
-        
     }
     
     func addHistory() {
         var historyData: HistoryDataSource!
         if userOptions.saveToHistory.value() {
+            
+            // TODO: not sure if this is best place to do this
+            snapLocationObject.viewRadius = getCurrentRadius()
+            
             historyData = HistoryDataSource()
             historyData.addNextLocationWithId(snapLocationObject)
         }
@@ -171,11 +174,14 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
     /// settings button tapped, call the option settings display controller
     func settingsTap(sender: JGTapButton) {
         performSegueWithIdentifier("settings", sender: self)
+        
     }
     
     /// history button tapped, call the option settings display controller
     func historyTap(sender: JGTapButton) {
         performSegueWithIdentifier("history", sender: self)
+        historyTable = self.navigationController!.viewControllers.last as! HistoryTableViewController
+        historyTable.delegateForHistorySelect = self
     }
     
     // MARK: Functions
@@ -191,7 +197,7 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         let location = CLLocation(latitude: (lastMapCenter?.latitude)!, longitude: (lastMapCenter?.longitude)!)
         infoTextToPaste = ""
         reverseGeocode(location)
-        self.centerMapByLocation(location, zoomLevel: 0)
+        self.centerMapByLocation(location)
     }
     
     internal func reverseGeocode(location: CLLocation) {
@@ -266,18 +272,22 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         
         UIGraphicsEndImageContext()
     }
-
+    
     /// center the map so location is in the middle of the screen
     /// if zoomLevel is zero then use current map radius otherwise use zoomLevel to calculate the radius
-    private func centerMapByLocation(location: CLLocation, zoomLevel: Int) {
+    private func centerMapByLocation(location: CLLocation, zoomLevel: Int = 0, radius: CLLocationDistance = 0.0) {
         
         var regionRadius: CLLocationDistance!
         
-        if zoomLevel == 0 {
+        switch radius != 0.0 {
+            
+        case true:
+            regionRadius = radius
+            
+        case false where zoomLevel == 0:
             regionRadius = getCurrentRadius()
-        } else {
-            // calulate the regionRadious number using the zoomLevel set by user & zoomfactor literal
-            // smaller number is a closer-in zoom level
+            
+        default:
             regionRadius = Double(zoomLevel) * zoomFactor
         }
         
@@ -440,6 +450,14 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
             infoScreen.hidden = true
             toolbarStackView.buttonsHidden(settings: false, snap: true, locate: false, history: false)
         }
+    }
+    
+    func didSelectHistorySnapLocation(snapLocation: SnapLocationObject) {
+        infoTextToPaste = ""
+        self.snapLocationObject = snapLocation
+        toolbarStackView.buttonsHidden(settings: false, snap: true, locate: false, history: false)
+        let location = CLLocation(latitude: Double(snapLocationObject.latitude)!, longitude: Double(snapLocationObject.longitude)!)
+        self.centerMapByLocation(location, zoomLevel: 0, radius: snapLocationObject.viewRadius)
     }
 
 }
