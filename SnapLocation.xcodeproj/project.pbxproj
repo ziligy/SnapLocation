@@ -21,6 +21,7 @@
 		CE57BF6E1BECBC49006D16C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE57BF6C1BECBC49006D16C3 /* LaunchScreen.storyboard */; };
 		CE57BF761BECBC6D006D16C3 /* SnapLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE57BF751BECBC6D006D16C3 /* SnapLocationViewController.swift */; };
 		CE57BF781BECBC88006D16C3 /* JGTapButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE57BF771BECBC88006D16C3 /* JGTapButton.swift */; };
+		CE79C50D1C3C1147008AC654 /* SnapLocationPhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE79C50C1C3C1147008AC654 /* SnapLocationPhotoAlbum.swift */; };
 		CEAEDB591C350F0900301673 /* JGSettingsManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEAEDB581C350F0900301673 /* JGSettingsManager.framework */; };
 		CEE78B501C12E57500C7145D /* HistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE78B4F1C12E57500C7145D /* HistoryTableViewCell.swift */; };
 		CEE78B521C13340200C7145D /* HistoryDatasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE78B511C13340200C7145D /* HistoryDatasource.swift */; };
@@ -44,6 +45,7 @@
 		CE57BF6F1BECBC49006D16C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE57BF751BECBC6D006D16C3 /* SnapLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapLocationViewController.swift; sourceTree = "<group>"; };
 		CE57BF771BECBC88006D16C3 /* JGTapButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JGTapButton.swift; sourceTree = "<group>"; };
+		CE79C50C1C3C1147008AC654 /* SnapLocationPhotoAlbum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapLocationPhotoAlbum.swift; sourceTree = "<group>"; };
 		CEAEDB581C350F0900301673 /* JGSettingsManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JGSettingsManager.framework; path = Carthage/Build/iOS/JGSettingsManager.framework; sourceTree = "<group>"; };
 		CEE78B4F1C12E57500C7145D /* HistoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewCell.swift; sourceTree = "<group>"; };
 		CEE78B511C13340200C7145D /* HistoryDatasource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDatasource.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 			children = (
 				CEFD29401C2AEF2400970C0A /* SettingsTableData.swift */,
 				CE13F7901C1087AD006291E3 /* SnapLocationObject.swift */,
+				CE79C50C1C3C1147008AC654 /* SnapLocationPhotoAlbum.swift */,
 				CEE78B511C13340200C7145D /* HistoryDatasource.swift */,
 			);
 			name = Models;
@@ -250,6 +253,7 @@
 			files = (
 				CE1218CD1C15A83600914700 /* ToolbarStackView.swift in Sources */,
 				CEE78B501C12E57500C7145D /* HistoryTableViewCell.swift in Sources */,
+				CE79C50D1C3C1147008AC654 /* SnapLocationPhotoAlbum.swift in Sources */,
 				CE57BF641BECBC49006D16C3 /* AppDelegate.swift in Sources */,
 				CE04AD881C12273E00F27708 /* BlurredBackgroundView.swift in Sources */,
 				CEE78B521C13340200C7145D /* HistoryDatasource.swift in Sources */,

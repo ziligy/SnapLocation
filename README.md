@@ -39,6 +39,7 @@ gpstime: 12/26/15 8:43 AM
     + ditched the blue dot
 - added carthage
     + to load realm framework
+- added custom photos album
 
 ## Settings
 - Map Display
