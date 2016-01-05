@@ -14,6 +14,9 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
     
     var historyTable: HistoryTableViewController!
     
+    /// custom photo album in which to save snaps
+    let photoAlbum = SnapLocationPhotoAlbum.sharedInstance
+    
     // MARK: View Objects
     
     /// the map object
@@ -145,7 +148,7 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         // move to top for screen shot
         infoScreen.frame.origin = CGPoint(x: 0, y: 0)
         
-        AudioServicesPlaySystemSound(cameraShutterSoundID)
+        
         saveScreenShot()
         
         // leave a little extra on top when in portrait, zero for landscape
@@ -261,14 +264,16 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         // first be sure save option is on
         guard userOptions.saveToPhotosAlbum.value() else {return}
         
+        AudioServicesPlaySystemSound(cameraShutterSoundID)
+        
         //Create the UIImage
         UIGraphicsBeginImageContext(view.bounds.size)
         view.layer.renderInContext(UIGraphicsGetCurrentContext()!)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
         
-        //Save it to the camera roll
-        if userOptions.saveToPhotosAlbum.value() { UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil) }
+        //Save it to the SnapLocation photo album
+        photoAlbum.saveImage(image)
         
         UIGraphicsEndImageContext()
     }

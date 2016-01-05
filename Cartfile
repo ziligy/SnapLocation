@@ -1,2 +1,2 @@
 github "realm/realm-cocoa"
-github "ziligy/JGSettingsManager"
+github "ziligy/JGSettingsManager" "master"
