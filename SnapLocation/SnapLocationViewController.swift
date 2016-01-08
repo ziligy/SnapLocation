@@ -10,7 +10,7 @@ import CoreLocation
 import MapKit
 import AudioToolbox
 
-class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate, HistoryTableDelegate {
+class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate, HistoryTableDelegate, SnapLocationPhotoAlbumDelegate {
     
     var historyTable: HistoryTableViewController!
     
@@ -62,6 +62,8 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        photoAlbum.delegate = self
         
         // init loaction manager
         locationManager.delegate = self
@@ -148,14 +150,11 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         // move to top for screen shot
         infoScreen.frame.origin = CGPoint(x: 0, y: 0)
         
-        
-        saveScreenShot()
+        saveSnapAndHistory()
         
         // leave a little extra on top when in portrait, zero for landscape
         let topMargin: CGFloat = view.bounds.size.width > view.bounds.size.height ? 0 : 20
         infoScreen.frame.origin = CGPoint(x: 0, y: topMargin)
-        
-        addHistory()
         
         toolbarStackView.hidden = false
         
@@ -170,14 +169,57 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
             snapLocationObject.viewRadius = getCurrentRadius()
             
             historyData = HistoryDataSource()
-            historyData.addNextLocationWithId(snapLocationObject)
+            historyData.addHistoryWithNextId(snapLocationObject)
         }
     }
     
+    /// capture the screen and save image & history
+    private func saveSnapAndHistory() {
+        
+        // first be sure save option is on
+        // if not add the history now
+        // otherwise wait for image info
+        if !userOptions.saveToPhotosAlbum.value() {
+            addHistory()
+            return
+        }
+        
+        AudioServicesPlaySystemSound(cameraShutterSoundID)
+        
+        //Create the UIImage
+        UIGraphicsBeginImageContext(view.bounds.size)
+        view.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
+        // Save it to the SnapLocation photo album
+        // addHistory will occur after image is stored
+        photoAlbum.saveImage(image)
+    }
+    
+    /// delegate called when save image is over
+    func saveImageCompleted(imageUUID: String) {
+        snapLocationObject.imageUUID = imageUUID
+        
+        // pop it into the main thread
+        dispatch_async(dispatch_get_main_queue()) {
+            self.addHistory()
+        }
+    }
+
+    func deleteImageCompleted(success: Bool, _ error: NSError?) {
+        if success {
+            print("image deletion was a succes!")
+        } else {
+            print("image deletion attempt did not happen \(error)")
+        }
+    }
+
     /// settings button tapped, call the option settings display controller
     func settingsTap(sender: JGTapButton) {
         performSegueWithIdentifier("settings", sender: self)
-        
     }
     
     /// history button tapped, call the option settings display controller
@@ -258,25 +300,6 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         mapKitView.removeAnnotation(pinAnnotation)
     }
     
-    /// capture the screen and save it
-    private func saveScreenShot() {
-        
-        // first be sure save option is on
-        guard userOptions.saveToPhotosAlbum.value() else {return}
-        
-        AudioServicesPlaySystemSound(cameraShutterSoundID)
-        
-        //Create the UIImage
-        UIGraphicsBeginImageContext(view.bounds.size)
-        view.layer.renderInContext(UIGraphicsGetCurrentContext()!)
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        
-        //Save it to the SnapLocation photo album
-        photoAlbum.saveImage(image)
-        
-        UIGraphicsEndImageContext()
-    }
     
     /// center the map so location is in the middle of the screen
     /// if zoomLevel is zero then use current map radius otherwise use zoomLevel to calculate the radius
@@ -418,7 +441,6 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         print("Error:" + error.localizedDescription)
     }
     
-    
     /// moves the buttons to the top of the z-order
     private func resetButtonsOnZTop() {
         toolbarStackView.removeFromSuperview()
@@ -428,7 +450,7 @@ class SnapLocationViewController: UIViewController, CLLocationManagerDelegate, M
         toolbarStackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -10).active = true
     }
     
-    /// private class the overrides text insets inside label
+    /// private class that overrides text insets inside label
     private class UILabelInseted: UILabel {
         override func drawTextInRect(rect: CGRect) {
             super.drawTextInRect(UIEdgeInsetsInsetRect(rect, UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)))

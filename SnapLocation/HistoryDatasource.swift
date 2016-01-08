@@ -30,26 +30,26 @@ class HistoryDataSource {
     }
     
     /// get new Id and adds SnapLocationObject to realm history db
-    internal func addNextLocationWithId(object: SnapLocationObject) {
+    internal func addHistoryWithNextId(object: SnapLocationObject) {
         object.id =  getNextId()
         do {
             try realm.write {
                 self.realm.add(object)
             }
         } catch {
-            print("HistoryDataSource: addLocation failed")
+            print("HistoryDataSource: addHistoryWithNextId failed")
         }
     }
-
-    internal func removeLocationAtIndex(index: Int) {
+    
+    internal func removeHistoryAtIndex(index: Int) {
         do {
             try realm.write {
                 self.realm.delete(self.locations[index])
             }
         } catch {
-            print("HistoryDataSource: removeLocationAtIndex failed")
+            print("HistoryDataSource: removeHistoryAtIndex failed")
         }
-     }
+    }
     
     /// cell count used by table controller to
     /// determine number of location/history cells
@@ -73,6 +73,10 @@ class HistoryDataSource {
         }
         
         return locations[index]
+    }
+    
+    internal func getAllImagesUUIDArray() -> [String] {
+        return locations.map( { $0.imageUUID })
     }
     
     internal func clearAllHistoryData() {

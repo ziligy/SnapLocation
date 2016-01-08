@@ -22,6 +22,7 @@ class SnapLocationObject: Object {
     dynamic var verticalAccuracy: Double = 0
     dynamic var horizontalAccuracy: Double = 0
     dynamic var viewRadius: Double = 0
+    dynamic var imageUUID = ""
         
     override class func primaryKey() -> String? {
         return "id"

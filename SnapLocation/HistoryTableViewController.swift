@@ -16,6 +16,8 @@ class HistoryTableViewController: UITableViewController
 {
     private var historyData = HistoryDataSource()
     
+    let photoAlbum = SnapLocationPhotoAlbum.sharedInstance
+    
     internal var delegateForHistorySelect: HistoryTableDelegate?
     
     override func viewDidLoad() {
@@ -45,7 +47,11 @@ class HistoryTableViewController: UITableViewController
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
             
-            historyData.removeLocationAtIndex(indexPath.row)
+            let cell = tableView.cellForRowAtIndexPath(indexPath) as! HistoryTableViewCell
+            
+            photoAlbum.deleteImageByLocalIdentifier([cell.imageUUID])
+            
+            historyData.removeHistoryAtIndex(indexPath.row)
             
             tableView.beginUpdates()
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
@@ -70,9 +76,19 @@ class HistoryTableViewController: UITableViewController
         
         //Create and add clear action
         let clearAllAction: UIAlertAction = UIAlertAction(title: "Clear All History", style: .Default) { action -> Void in
+            
+            // get array of UUIDs for the data
+            let imageUUIDs = self.historyData.getAllImagesUUIDArray()
+            // delete the images
+            self.photoAlbum.deleteImageByLocalIdentifier(imageUUIDs)
+            
+            // delete the history
             self.historyData.clearAllHistoryData()
+            
+            // reload the empty page
             self.tableView.reloadData()
         }
+        
         actionSheetController.addAction(clearAllAction)
         
         //Create and add the Cancel action
